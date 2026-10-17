@@ -642,6 +642,47 @@
       .hashira-photo-wrapper { height: 320px; }
       .hero-title { font-size: 3rem; }
     }
+
+    /* ЯЗЫКОВОЙ ПЕРЕКЛЮЧАТЕЛЬ */
+    .lang-switch-fixed {
+      position: fixed;
+      top: 25px;
+      right: 185px;
+      z-index: 1000;
+      background: rgba(15, 20, 28, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      padding: 4px 6px;
+      display: flex;
+      gap: 4px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    }
+    .lang-switch-fixed .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-switch-fixed .lang-btn.active {
+      background: var(--water-cyan);
+      color: #07080b;
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+    }
+    @media (max-width: 768px) {
+      .lang-switch-fixed {
+        top: auto;
+        bottom: 25px;
+        left: 20px;
+        right: auto;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -665,6 +706,13 @@
   </a>
 
   <!-- Звуковая плашка -->
+    <!-- Переключатель языков -->
+  <div class="lang-switch-fixed">
+    <button class="lang-btn active" id="dsLangRu" onclick="setLanguage('ru')">RU</button>
+    <button class="lang-btn" id="dsLangEn" onclick="setLanguage('en')">EN</button>
+    <button class="lang-btn" id="dsLangJa" onclick="setLanguage('ja')">日本語</button>
+  </div>
+
   <button class="sound-badge" id="btn-sound">Звук: ВКЛ 🔊</button>
 
   <!-- Рассекающий луч меча -->
@@ -677,15 +725,13 @@
   <section class="hero">
     <div class="hero-kanji">鬼殺隊</div>
     <div class="hero-content">
-      <div class="hero-badge">EcosystemNever • Demon Slayer Corps</div>
-      <h1 class="hero-title">EcosystemNever<br><span class="glow-water">BREATHING ARCHIVE</span></h1>
-      <p class="hero-subtitle">
-        Полный архив вселенной «Клинок, рассекающий демонов». Все 14 стилей дыхания от истоков Солнца до редчайших ветвей, и девять несокрушимых Столпов Кисацутай.
-      </p>
+      <div class="hero-badge" data-i18n="hero_badge">EcosystemNever • Demon Slayer Corps</div>
+      <h1 class="hero-title" data-i18n-html="hero_title">EcosystemNever<br><span class="glow-water">BREATHING ARCHIVE</span></h1>
+      <p class="hero-subtitle" data-i18n="hero_desc">Полный архив вселенной «Клинок, рассекающий демонов». Все 14 стилей дыхания от истоков Солнца до редчайших ветвей, и девять несокрушимых Столпов Кисацутай.</p>
       <div class="hero-actions">
-        <button class="btn-slash" id="strikeBtn">УДАР КЛИНКОМ ⚔️</button>
-        <a href="#styles" class="btn-outline">СТИЛИ ДЫХАНИЯ 📜</a>
-        <a href="#hashira" class="btn-outline">9 СТОЛПОВ ⛩️</a>
+        <button class="btn-slash" id="strikeBtn" data-i18n="hero_btn_strike">УДАР КЛИНКОМ ⚔️</button>
+        <a href="#styles" class="btn-outline" data-i18n="hero_btn_styles">СТИЛИ ДЫХАНИЯ 📜</a>
+        <a href="#hashira" class="btn-outline" data-i18n="hero_btn_hashira">9 СТОЛПОВ ⛩️</a>
       </div>
     </div>
   </section>
@@ -694,11 +740,9 @@
   <section class="section" id="styles">
     <div class="container">
       <div class="section-header">
-        <div class="section-sub">Архив боевых искусств мечников</div>
-        <h2 class="section-title">Все Стили Дыхания</h2>
-        <p class="section-desc">
-          Полная родословная всех 14 стилей дыхания канона Kimetsu no Yaiba: от первородного пламени Солнца до уникальных индивидуальных форм.
-        </p>
+        <div class="section-sub" data-i18n="styles_sub">Архив боевых искусств мечников</div>
+        <h2 class="section-title" data-i18n="styles_title">Все Стили Дыхания</h2>
+        <p class="section-desc" data-i18n="styles_desc">Полная родословная всех 14 стилей дыхания канона Kimetsu no Yaiba: от первородного пламени Солнца до уникальных индивидуальных форм.</p>
       </div>
 
       <div class="skills-grid">
@@ -922,10 +966,8 @@
     <div class="container">
       <div class="section-header">
         <div class="section-sub">Опора Кисацутай • Высшие мечники</div>
-        <h2 class="section-title">Девять Столпов (Хашира)</h2>
-        <p class="section-desc">
-          Сильнейшие воины организации Истребителей демонов под началом главы рода Убуяшики. Каждый из них посвятил жизнь защите человечества.
-        </p>
+        <h2 class="section-title" data-i18n="hashira_title">Девять Столпов (Хашира)</h2>
+        <p class="section-desc" data-i18n="hashira_desc">Сильнейшие воины организации, несущие на своих плечах судьбу человечества в вечной битве против Мудзана Кибуцуджи.</p>
       </div>
 
       <div class="hashira-grid">
@@ -1389,6 +1431,108 @@
         ease: "power2.out"
       });
     });
+  
+
+    /* ==============================================================
+       МУЛЬТИЯЗЫЧНОСТЬ (РУССКИЙ / ENGLISH / 日本語)
+       ============================================================== */
+    const TRANSLATIONS = {
+      ru: {
+        hero_badge: "EcosystemNever • Demon Slayer Corps",
+        hero_title: "EcosystemNever<br><span class=\"glow-water\">BREATHING ARCHIVE</span>",
+        hero_desc: "Полный архив вселенной «Клинок, рассекающий демонов». Все 14 стилей дыхания от истоков Солнца до редчайших ветвей, и девять несокрушимых Столпов Кисацутай.",
+        hero_btn_strike: "УДАР КЛИНКОМ ⚔️",
+        hero_btn_styles: "СТИЛИ ДЫХАНИЯ 📜",
+        hero_btn_hashira: "9 СТОЛПОВ ⛩️",
+        styles_sub: "Архив боевых искусств мечников",
+        styles_title: "Все Стили Дыхания",
+        styles_desc: "Полная родословная всех 14 стилей дыхания канона Kimetsu no Yaiba: от первородного пламени Солнца до уникальных индивидуальных форм.",
+        hashira_sub: "Элита истребителей демонов Кисацутай",
+        hashira_title: "Девять Столпов (Хашира)",
+        hashira_desc: "Сильнейшие воины организации, несущие на своих плечах судьбу человечества в вечной битве против Мудзана Кибуцуджи.",
+        dojo_title: "Катана Додзе: Интерактивный клинок",
+        dojo_desc: "Тренируйте свои рефлексы. Рассекайте демонические иллюзии взмахами курсора и тапами.",
+        crow_title: "Связь через Ворона Касугай",
+        crow_desc: "Каждый мечник заслуживает надежного покровителя. Свяжитесь с создателем экосистемы для разработки проектов, обсуждения идей или сотрудничества.",
+        crow_btn: "ОТПРАВИТЬ ПОСЛАНИЕ СОЗДАТЕЛЮ @light18101 🦅",
+        btn_sound_on: "Звук: ВКЛ 🔊",
+        btn_sound_off: "Звук: ВЫКЛ 🔇"
+      },
+      en: {
+        hero_badge: "EcosystemNever • Demon Slayer Corps",
+        hero_title: "EcosystemNever<br><span class=\"glow-water\">BREATHING ARCHIVE</span>",
+        hero_desc: "The complete archive of the Demon Slayer universe. All 14 breathing styles from Sun to unique derivatives, and the nine unbreakable Kisatsutai Hashiras.",
+        hero_btn_strike: "BLADE STRIKE ⚔️",
+        hero_btn_styles: "BREATHING STYLES 📜",
+        hero_btn_hashira: "9 HASHIRAS ⛩️",
+        styles_sub: "Archive of Swordsmen Martial Arts",
+        styles_title: "All Breathing Styles",
+        styles_desc: "Complete lineage of all 14 Kimetsu no Yaiba breathing styles: from original Sun flame to unique combat styles.",
+        hashira_sub: "Elite Kisatsutai Demon Slayers",
+        hashira_title: "The Nine Hashiras",
+        hashira_desc: "The strongest warriors of the Corps, carrying the fate of humanity against Muzan Kibutsuji.",
+        dojo_title: "Katana Dojo: Interactive Blade",
+        dojo_desc: "Train your reflexes. Slash demonic illusions with cursor sweeps and taps.",
+        crow_title: "Kasugai Raven Dispatch",
+        crow_desc: "Every slayer needs a patron. Contact the ecosystem founder for custom projects, ideas, or collaboration.",
+        crow_btn: "SEND DISPATCH TO FOUNDER @light18101 🦅",
+        btn_sound_on: "Sound: ON 🔊",
+        btn_sound_off: "Sound: OFF 🔇"
+      },
+      ja: {
+        hero_badge: "EcosystemNever • 鬼殺隊全集",
+        hero_title: "EcosystemNever<br><span class=\"glow-water\">呼吸のアーカイブ</span>",
+        hero_desc: "「鬼滅の刃」完全呼吸アーカイブ。日の呼吸の始祖から派生流派まで全14系統、そして鬼殺隊を支える不屈の九人の柱。",
+        hero_btn_strike: "日輪刀の斬撃 ⚔️",
+        hero_btn_styles: "全呼吸の型 📜",
+        hero_btn_hashira: "九人の柱 ⛩️",
+        styles_sub: "剣士たちの至高の武技アーカイブ",
+        styles_title: "全14系統の呼吸",
+        styles_desc: "日の呼吸から派生した全ての呼吸の系譜。鬼を滅する究極の太刀筋。",
+        hashira_sub: "鬼殺隊最高位の精鋭剣士",
+        hashira_title: "九人の柱（柱一覧）",
+        hashira_desc: "鬼舞辻無惨討伐のために己の命を捧げる最強の九人の柱たち。",
+        dojo_title: "刀道場：双方向の刃",
+        dojo_desc: "日輪刀の刃筋を研ぎ澄ませ。カーソルやタップで悪鬼を両断せよ。",
+        crow_title: "鎹烏（かすがいがらす）通信",
+        crow_desc: "開発依頼・技術連携・仕様書作成など、創設者 @light18101 へ直通。",
+        crow_btn: "創設者 @light18101 に連絡する 🦅",
+        btn_sound_on: "音声: オン 🔊",
+        btn_sound_off: "音声: オフ 🔇"
+      }
+    };
+
+    let currentLang = localStorage.getItem('never_slayer_lang') || 'ru';
+
+    function setLanguage(lang) {
+      if (!TRANSLATIONS[lang]) lang = 'ru';
+      currentLang = lang;
+      localStorage.setItem('never_slayer_lang', lang);
+
+      document.querySelectorAll('.lang-switch-fixed .lang-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById('dsLang' + lang.charAt(0).toUpperCase() + lang.slice(1));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const t = TRANSLATIONS[lang];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+      });
+
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (t[key]) el.innerHTML = t[key];
+      });
+
+      const soundBtn = document.getElementById('btn-sound');
+      if (soundBtn) {
+        soundBtn.textContent = soundEnabled ? t.btn_sound_on : t.btn_sound_off;
+      }
+    }
+
+    // Инициализация языка
+    setLanguage(currentLang);
+
   </script>
 </body>
 </html>
