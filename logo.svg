@@ -1,0 +1,55 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Liquid Titanium Dark Gradient -->
+    <linearGradient id="mobiusDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#334155" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Satin Chrome Ribbon Gradient -->
+    <linearGradient id="mobiusChrome" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#94a3b8" />
+      <stop offset="40%" stop-color="#475569" />
+      <stop offset="70%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+
+    <!-- Platinum Specular Edge -->
+    <linearGradient id="mobiusBevel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#475569" stop-opacity="0.1" />
+    </linearGradient>
+
+    <!-- Muted Sapphire Ambient Glow -->
+    <radialGradient id="mobiusCoreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#1e293b" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Ambient Core Glow -->
+  <circle cx="60" cy="60" r="28" fill="url(#mobiusCoreGlow)" />
+
+  <!-- Outer Isometric Contour -->
+  <ellipse cx="60" cy="60" rx="52" ry="32" stroke="#334155" stroke-width="0.75" stroke-dasharray="2 4" opacity="0.4" />
+
+  <!-- Left Ribbon Loop (Möbius Infinity 3D) -->
+  <path d="M 38 60 C 20 60 14 44 26 34 C 40 22 55 45 60 60 C 55 75 40 98 26 86 C 14 76 20 60 38 60 Z" 
+        fill="url(#mobiusChrome)" stroke="#475569" stroke-width="0.8" />
+
+  <!-- Right Ribbon Loop (Möbius Infinity 3D) -->
+  <path d="M 82 60 C 100 60 106 76 94 86 C 80 98 65 75 60 60 C 65 45 80 22 94 34 C 106 44 100 60 82 60 Z" 
+        fill="url(#mobiusDark)" stroke="#475569" stroke-width="0.8" />
+
+  <!-- Specular Polished Chrome Ribbons -->
+  <path d="M 38 60 C 20 60 14 44 26 34 C 40 22 55 45 60 60" 
+        stroke="url(#mobiusBevel)" stroke-width="1.6" stroke-linecap="round" fill="none" />
+  <path d="M 82 60 C 100 60 106 76 94 86 C 80 98 65 75 60 60" 
+        stroke="url(#mobiusBevel)" stroke-width="1.6" stroke-linecap="round" fill="none" />
+
+  <!-- Center Core Singularity -->
+  <circle cx="60" cy="60" r="4.5" fill="#0f172a" stroke="#64748b" stroke-width="1" />
+  <circle cx="60" cy="60" r="2" fill="#38bdf8" />
+  <circle cx="59" cy="59" r="0.75" fill="#ffffff" />
+</svg>

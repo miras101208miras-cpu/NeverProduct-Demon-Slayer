@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeverProduct | Demon Slayer — Все Стили Дыхания & Столпы</title>
+  <title>EcosystemNever | Клинок, рассекающий демонов — Все Стили Дыхания & Столпы</title>
 
   <!-- Японские и аутентичные шрифты -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,6 +98,39 @@
       background: var(--water-cyan);
       color: #07080b;
       box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+
+    /* БЕЙДЖ ЭКОСИСТЕМЫ С ОФИЦИАЛЬНЫМ ЛОГОТИПОМ */
+    .ecosystem-badge {
+      position: fixed;
+      top: 25px;
+      left: 30px;
+      z-index: 1000;
+      background: rgba(15, 20, 28, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      padding: 7px 18px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      border-radius: 30px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      transition: all 0.3s ease;
+    }
+    .ecosystem-badge:hover {
+      border-color: #38bdf8;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+    .ecosystem-badge-svg {
+      width: 22px;
+      height: 22px;
     }
 
     /* КОНТЕЙНЕР */
@@ -619,6 +652,18 @@
   <!-- Узор кимоно Танджиро -->
   <div class="ichimatsu-overlay"></div>
 
+  <!-- Официальный бейдж Экосистемы EcosystemNever с логотипом Möbius Infinity -->
+  <a href="https://miras101208miras-cpu.github.io/EcosystemNever/" class="ecosystem-badge" title="Главный портал EcosystemNever">
+    <svg class="ecosystem-badge-svg" viewBox="0 0 120 120" fill="none">
+      <ellipse cx="60" cy="60" rx="52" ry="32" stroke="#334155" stroke-width="1" stroke-dasharray="2 4" opacity="0.6" />
+      <path d="M 38 60 C 20 60 14 44 26 34 C 40 22 55 45 60 60 C 55 75 40 98 26 86 C 14 76 20 60 38 60 Z" fill="#94a3b8" stroke="#475569" stroke-width="1" />
+      <path d="M 82 60 C 100 60 106 76 94 86 C 80 98 65 75 60 60 C 65 45 80 22 94 34 C 106 44 100 60 82 60 Z" fill="#334155" stroke="#475569" stroke-width="1" />
+      <circle cx="60" cy="60" r="4.5" fill="#0f172a" stroke="#64748b" stroke-width="1" />
+      <circle cx="60" cy="60" r="2" fill="#38bdf8" />
+    </svg>
+    <span>ECOSYSTEM<strong style="color: #38bdf8;">NEVER</strong></span>
+  </a>
+
   <!-- Звуковая плашка -->
   <button class="sound-badge" id="btn-sound">Звук: ВКЛ 🔊</button>
 
@@ -626,14 +671,14 @@
   <div class="slash-blade" id="slashBlade"></div>
 
   <!-- Всплывающий тост -->
-  <div class="toast-box" id="toastBox">Удар клинка NeverProduct! ⚔️</div>
+  <div class="toast-box" id="toastBox">Удар клинка EcosystemNever! ⚔️</div>
 
   <!-- 1. ГЛАВНЫЙ ЭКРАН (HERO) -->
   <section class="hero">
     <div class="hero-kanji">鬼殺隊</div>
     <div class="hero-content">
-      <div class="hero-badge">NeverProduct • Demon Slayer Corps</div>
-      <h1 class="hero-title">NeverProduct<br><span class="glow-water">BREATHING ARCHIVE</span></h1>
+      <div class="hero-badge">EcosystemNever • Demon Slayer Corps</div>
+      <h1 class="hero-title">EcosystemNever<br><span class="glow-water">BREATHING ARCHIVE</span></h1>
       <p class="hero-subtitle">
         Полный архив вселенной «Клинок, рассекающий демонов». Все 14 стилей дыхания от истоков Солнца до редчайших ветвей, и девять несокрушимых Столпов Кисацутай.
       </p>
@@ -1105,12 +1150,20 @@
     <div class="crow-kanji">悪鬼滅殺</div>
     <h2 class="crow-title">Послание Вороном Касугай</h2>
     <p class="crow-desc">
-      Сайт <strong>NeverProduct</strong> посвящен величию вселенной Клинок, рассекающий демонов. 
-      Если ты ищешь союзника для эпических проектов — отправь весточку вороном!
+      Портал входит в состав цифровой экосистемы <strong>EcosystemNever</strong>. 
+      Если ты ищешь надежных союзников для создания эпических проектов — свяжись с нами напрямую!
     </p>
-    <a href="https://t.me/yourusername" target="_blank" class="btn-slash" style="text-decoration: none;">
-      ОТПРАВИТЬ ПОСЛАНИЕ В TELEGRAM 🦅
-    </a>
+    <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+      <a href="https://t.me/light18101" target="_blank" class="btn-slash" style="text-decoration: none;">
+        СВЯЗЬ С СОЗДАТЕЛЕМ (@light18101) 🦅
+      </a>
+      <a href="https://t.me/ecosystem_never_bot" target="_blank" class="btn-outline" style="text-decoration: none;">
+        ОТКРЫТЬ TELEGRAM БОТ 🤖
+      </a>
+      <a href="https://miras101208miras-cpu.github.io/EcosystemNever/" class="btn-outline" style="text-decoration: none;">
+        ГЛАВНЫЙ САЙТ СТУДИИ 🌐
+      </a>
+    </div>
   </section>
 
   <!-- БИБЛИОТЕКИ GSAP -->
