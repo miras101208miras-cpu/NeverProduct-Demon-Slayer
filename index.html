@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeverProduct | Demon Slayer — Все Стили Дыхания & Столпы</title>
+
+  <!-- Японские и аутентичные шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Montserrat:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07080b;
+      --bg-card: rgba(14, 20, 29, 0.75);
+      --water-cyan: #00f0ff;
+      --water-deep: #0077b6;
+      --flame-orange: #ff4500;
+      --flame-yellow: #ffb703;
+      --text-white: #f8fafc;
+      --text-muted: #8492a6;
+      --text-dim: #505c6e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      cursor: crosshair; /* Курсор-прицел самурая */
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg);
+      overflow-x: hidden;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-white);
+      font-family: 'Montserrat', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    ::selection {
+      background: var(--water-cyan);
+      color: #000;
+    }
+
+    /* Фоновый холст для частиц меча */
+    #cursor-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* Фоновый узор (Шахматка Танджиро) */
+    .ichimatsu-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(45deg, #0f151c 25%, transparent 25%), 
+        linear-gradient(-45deg, #0f151c 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #0f151c 75%), 
+        linear-gradient(-45deg, transparent 75%, #0f151c 75%);
+      background-size: 80px 80px;
+      opacity: 0.12;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ПАНЕЛЬ УПРАВЛЕНИЯ ЗВУКОМ */
+    .sound-badge {
+      position: fixed;
+      top: 25px;
+      right: 30px;
+      z-index: 1000;
+      background: rgba(15, 20, 28, 0.85);
+      border: 1px solid var(--water-cyan);
+      color: var(--water-cyan);
+      padding: 9px 20px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+      transition: all 0.3s ease;
+    }
+    .sound-badge:hover {
+      background: var(--water-cyan);
+      color: #07080b;
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+    }
+
+    /* КОНТЕЙНЕР */
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* СЕКЦИЯ 1: HERO */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 120px 20px 80px;
+    }
+
+    .hero-kanji {
+      font-family: 'Noto Serif JP', serif;
+      font-size: clamp(8rem, 25vw, 22rem);
+      color: rgba(255, 255, 255, 0.025);
+      position: absolute;
+      user-select: none;
+      z-index: 0;
+      letter-spacing: 30px;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--water-cyan);
+      margin-bottom: 22px;
+      padding: 6px 18px;
+      border: 1px solid rgba(0, 240, 255, 0.35);
+      background: rgba(0, 240, 255, 0.06);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: 1.05;
+      font-weight: 900;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+
+    .hero-title .glow-water {
+      color: var(--water-cyan);
+      text-shadow: 0 0 35px rgba(0, 240, 255, 0.85), 0 0 70px rgba(0, 240, 255, 0.4);
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto 44px;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    /* КНОПКА С УДАРОМ КЛИНКА */
+    .btn-slash {
+      position: relative;
+      padding: 16px 42px;
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: #fff;
+      background: transparent;
+      border: 2px solid var(--water-cyan);
+      overflow: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+    }
+
+    .btn-slash::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-slash:hover {
+      background: var(--water-cyan);
+      color: #07080b;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.8);
+      transform: translateY(-2px);
+    }
+
+    .btn-slash:hover::before {
+      left: 100%;
+    }
+
+    .btn-outline {
+      padding: 16px 36px;
+      font-family: 'Cinzel', serif;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--text-white);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      transition: all 0.35s ease;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-2px);
+    }
+
+    /* ЭФФЕКТ РАССЕЧЕНИЯ ЭКРАНА (СЛЕПЯЩАЯ ЛИНИЯ) */
+    .slash-blade {
+      position: fixed;
+      top: 50%;
+      left: -50vw;
+      width: 200vw;
+      height: 4px;
+      background: #ffffff;
+      box-shadow: 0 0 25px 8px var(--water-cyan), 0 0 60px 15px #fff;
+      transform: translateY(-50%) rotate(-25deg) scaleX(0);
+      transform-origin: center;
+      z-index: 10000;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* ЗАГОЛОВКИ СЕКЦИЙ */
+    .section {
+      padding: 120px 0;
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 70px;
+    }
+
+    .section-sub {
+      color: var(--water-cyan);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 15px auto 0;
+      font-size: 1rem;
+    }
+
+    /* ==============================================================
+       СЕКЦИЯ: ВСЕ 14 СТИЛЕЙ ДЫХАНИЯ (КРД)
+       ============================================================== */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+    }
+
+    .skill-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 38px 32px;
+      border-radius: 8px;
+      backdrop-filter: blur(14px);
+      position: relative;
+      transition: all 0.4s ease;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .skill-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 3px;
+      background: var(--card-accent, var(--water-cyan));
+      box-shadow: 0 0 10px var(--card-accent, var(--water-cyan));
+      transition: width 0.4s ease;
+    }
+
+    .skill-card:hover {
+      border-color: var(--card-accent, rgba(0, 240, 255, 0.4));
+      transform: translateY(-8px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
+    }
+
+    .skill-card:hover::after {
+      width: 100%;
+    }
+
+    .skill-kanji {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 4rem;
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      color: rgba(255, 255, 255, 0.04);
+      line-height: 1;
+      user-select: none;
+      transition: all 0.4s ease;
+    }
+
+    .skill-card:hover .skill-kanji {
+      color: rgba(255, 255, 255, 0.08);
+      transform: scale(1.1);
+    }
+
+    .skill-form {
+      font-size: 0.8rem;
+      color: var(--card-accent, var(--water-cyan));
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .skill-title {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+      font-weight: 800;
+      font-family: 'Cinzel', serif;
+    }
+
+    .skill-jp-name {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .skill-desc {
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 0.93rem;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .skill-users {
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      padding-top: 14px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+    }
+
+    .skill-users strong {
+      color: #cbd5e1;
+    }
+
+    /* ==============================================================
+       СЕКЦИЯ: ДЕВЯТЬ СТОЛПОВ (ХАШИРА)
+       ============================================================== */
+    .hashira-section {
+      background: #040507;
+      position: relative;
+    }
+
+    .hashira-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 32px;
+    }
+
+    .hashira-card {
+      background: rgba(13, 18, 26, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .hashira-card:hover {
+      border-color: var(--p-color, var(--water-cyan));
+      transform: translateY(-8px);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 25px var(--p-glow, rgba(0, 240, 255, 0.3));
+    }
+
+    .hashira-photo-wrapper {
+      position: relative;
+      height: 380px;
+      overflow: hidden;
+      background: #090e16;
+    }
+
+    .hashira-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .hashira-card:hover .hashira-photo {
+      transform: scale(1.06);
+    }
+
+    /* Градиент затемнения снизу фото */
+    .hashira-photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(13, 18, 26, 0.95) 100%);
+      pointer-events: none;
+    }
+
+    .hashira-badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: rgba(7, 8, 11, 0.85);
+      border: 1px solid var(--p-color, var(--water-cyan));
+      color: var(--p-color, var(--water-cyan));
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+    }
+
+    .hashira-content {
+      padding: 28px 26px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .hashira-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .hashira-jp-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1rem;
+      color: var(--p-color, var(--water-cyan));
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .hashira-desc {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .hashira-quote {
+      font-style: italic;
+      color: #e2e8f0;
+      font-size: 0.88rem;
+      border-left: 2px solid var(--p-color, var(--water-cyan));
+      padding-left: 14px;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .hashira-specs {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 14px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hashira-specs span strong {
+      color: #cbd5e1;
+    }
+
+    /* ДОДЗЕ */
+    .dojo-section {
+      background: radial-gradient(circle at center, rgba(17, 23, 33, 0.6), #07080b);
+      text-align: center;
+      padding: 100px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .dojo-kanji {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 5.5rem;
+      color: var(--water-cyan);
+      opacity: 0.3;
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+
+    /* ФУТЕР (ПИСЬМО ВОРОНА) */
+    .crow-section {
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 90px 20px;
+    }
+
+    .crow-kanji {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 2.2rem;
+      color: var(--water-cyan);
+      margin-bottom: 12px;
+      letter-spacing: 10px;
+    }
+
+    .crow-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.6rem;
+      margin-bottom: 18px;
+    }
+
+    .crow-desc {
+      color: var(--text-muted);
+      margin-bottom: 35px;
+      max-width: 600px;
+      line-height: 1.8;
+    }
+
+    /* ВСПЛЫВАЮЩИЙ ТОСТ */
+    .toast-box {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(15, 20, 28, 0.95);
+      border: 1px solid var(--water-cyan);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(0, 240, 255, 0.4);
+      z-index: 10001;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .toast-box.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .skills-grid, .hashira-grid { grid-template-columns: 1fr; }
+      .hashira-photo-wrapper { height: 320px; }
+      .hero-title { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Холст для кастомных частиц меча -->
+  <canvas id="cursor-canvas"></canvas>
+
+  <!-- Узор кимоно Танджиро -->
+  <div class="ichimatsu-overlay"></div>
+
+  <!-- Звуковая плашка -->
+  <button class="sound-badge" id="btn-sound">Звук: ВКЛ 🔊</button>
+
+  <!-- Рассекающий луч меча -->
+  <div class="slash-blade" id="slashBlade"></div>
+
+  <!-- Всплывающий тост -->
+  <div class="toast-box" id="toastBox">Удар клинка NeverProduct! ⚔️</div>
+
+  <!-- 1. ГЛАВНЫЙ ЭКРАН (HERO) -->
+  <section class="hero">
+    <div class="hero-kanji">鬼殺隊</div>
+    <div class="hero-content">
+      <div class="hero-badge">NeverProduct • Demon Slayer Corps</div>
+      <h1 class="hero-title">NeverProduct<br><span class="glow-water">BREATHING ARCHIVE</span></h1>
+      <p class="hero-subtitle">
+        Полный архив вселенной «Клинок, рассекающий демонов». Все 14 стилей дыхания от истоков Солнца до редчайших ветвей, и девять несокрушимых Столпов Кисацутай.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-slash" id="strikeBtn">УДАР КЛИНКОМ ⚔️</button>
+        <a href="#styles" class="btn-outline">СТИЛИ ДЫХАНИЯ 📜</a>
+        <a href="#hashira" class="btn-outline">9 СТОЛПОВ ⛩️</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. СЕКЦИЯ: ВСЕ 14 СТИЛЕЙ ДЫХАНИЯ -->
+  <section class="section" id="styles">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-sub">Архив боевых искусств мечников</div>
+        <h2 class="section-title">Все Стили Дыхания</h2>
+        <p class="section-desc">
+          Полная родословная всех 14 стилей дыхания канона Kimetsu no Yaiba: от первородного пламени Солнца до уникальных индивидуальных форм.
+        </p>
+      </div>
+
+      <div class="skills-grid">
+
+        <!-- 1. Дыхание Солнца -->
+        <div class="skill-card" style="--card-accent: #ff2a2a;">
+          <div class="skill-kanji">日</div>
+          <div class="skill-form">Первородный источник всех дыханий</div>
+          <h3 class="skill-title">Дыхание Солнца</h3>
+          <div class="skill-jp-name">日の呼吸 • Hinokami Kagura</div>
+          <p class="skill-desc">
+            Изначальное и самое могущественное дыхание, созданное легендарным мечником Ёриичи Цугикуни. 
+            Воспроизводит силу и свет солнечных лучей, нанося демонам незаживающие солнечные ожоги и подавляя их регенерацию. Включает 13 непрерывных форм танца.
+          </p>
+          <div class="skill-users">
+            <strong>Мастера:</strong> Ёриичи Цугикуни, Танджиро Камадо, Сумиёси
+          </div>
+        </div>
+
+        <!-- 2. Дыхание Луны -->
+        <div class="skill-card" style="--card-accent: #a855f7;">
+          <div class="skill-kanji">月</div>
+          <div class="skill-form">Второе первородное дыхание</div>
+          <h3 class="skill-title">Дыхание Луны</h3>
+          <div class="skill-jp-name">月の呼吸 • Tsuki no Kokyū</div>
+          <p class="skill-desc">
+            Создано братом-близнецом Ёриичи — Мичикацу Цугикуни (Кокушибо). 
+            Порождает хаотичные полумесяцы из острейшей плоти и стали, непрерывно меняющие размер и направление рассечения. Насчитывает 16 разрушительных ката.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Кокушибо (Первая Высшая Луна)
+          </div>
+        </div>
+
+        <!-- 3. Дыхание Воды -->
+        <div class="skill-card" style="--card-accent: #00f0ff;">
+          <div class="skill-kanji">水</div>
+          <div class="skill-form">Базовая стихия • Гибкость и адаптация</div>
+          <h3 class="skill-title">Дыхание Воды</h3>
+          <div class="skill-jp-name">水の呼吸 • Mizu no Kokyū</div>
+          <p class="skill-desc">
+            Самое гибкое и универсальное дыхание. Движения мечника текут плавно, как вода, легко перенаправляя вражеские удары и находя бреши в защите. 
+            Включает 10 традиционных форм и 11-ю уникальную форму Гию Томиоки — «Штиль».
+          </p>
+          <div class="skill-users">
+            <strong>Мастера:</strong> Гию Томиока, Саконджи Урокодаки, Танджиро Камадо, Сабито, Макомо
+          </div>
+        </div>
+
+        <!-- 4. Дыхание Пламени -->
+        <div class="skill-card" style="--card-accent: #ff4500;">
+          <div class="skill-kanji">炎</div>
+          <div class="skill-form">Базовая стихия • Яростная мощь</div>
+          <h3 class="skill-title">Дыхание Пламени</h3>
+          <div class="skill-jp-name">炎の呼吸 • Honō no Kokyū</div>
+          <p class="skill-desc">
+            Сокрушительные рубящие удары колоссальной взрывной силы, обрушивающиеся подобно неукротимому огню. 
+            Требует несокрушимой воли и чистого боевого духа. Кульминация стиля — девятая форма «Чистилище» (Рэнгоку).
+          </p>
+          <div class="skill-users">
+            <strong>Мастера:</strong> Кёдзюро Ренгоку, Шинджуро Ренгоку
+          </div>
+        </div>
+
+        <!-- 5. Дыхание Грома -->
+        <div class="skill-card" style="--card-accent: #ffee32;">
+          <div class="skill-kanji">雷</div>
+          <div class="skill-form">Базовая стихия • Скорость молнии</div>
+          <h3 class="skill-title">Дыхание Грома</h3>
+          <div class="skill-jp-name">雷の呼吸 • Kaminari no Kokyū</div>
+          <p class="skill-desc">
+            Фокусирует силу всего тела в мышцах ног, разгоняя мечника до сверхзвуковой скорости рывка. 
+            Удар клинка происходит во мгновение ока и сопровождается громовым раскатом. Фирменная форма — «Молниеносный громовой удар».
+          </p>
+          <div class="skill-users">
+            <strong>Мастера:</strong> Зеницу Агацума, Кайгаку, Дзигоро Куваджима
+          </div>
+        </div>
+
+        <!-- 6. Дыхание Ветра -->
+        <div class="skill-card" style="--card-accent: #10b981;">
+          <div class="skill-kanji">風</div>
+          <div class="skill-form">Базовая стихия • Неистовые вихри</div>
+          <h3 class="skill-title">Дыхание Ветра</h3>
+          <div class="skill-jp-name">風の呼吸 • Kaze no Kokyū</div>
+          <p class="skill-desc">
+            Яростные вихревые потоки и смертоносные лезвия сжатого воздуха, рассекающие противника с любой дистанции. 
+            Основано на непрерывном атакующем прессинге и ярости, разрывающей плоть демонов на куски.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Санеми Шинадзугава
+          </div>
+        </div>
+
+        <!-- 7. Дыхание Камня -->
+        <div class="skill-card" style="--card-accent: #a3e635;">
+          <div class="skill-kanji">岩</div>
+          <div class="skill-form">Базовая стихия • Несокрушимая монолитность</div>
+          <h3 class="skill-title">Дыхание Камня</h3>
+          <div class="skill-jp-name">岩の呼吸 • Iwa no Kokyū</div>
+          <p class="skill-desc">
+            Самое сложное физически дыхание. Мечник использует землю как точку абсолютной опоры, 
+            нанося сокрушительные удары тяжелейшим оружием — топором и шипованным шаром на цепи, перемалывая кости демонов в пыль.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Гёмей Химеджима
+          </div>
+        </div>
+
+        <!-- 8. Дыхание Тумана -->
+        <div class="skill-card" style="--card-accent: #2dd4bf;">
+          <div class="skill-kanji">霞</div>
+          <div class="skill-form">Ответвление от Дыхания Ветра</div>
+          <h3 class="skill-title">Дыхание Тумана</h3>
+          <div class="skill-jp-name">霞の呼吸 • Kasumi no Kokyū</div>
+          <p class="skill-desc">
+            Окутывает поле боя иллюзией непроглядной белой дымки. 
+            Мечник обманывает зрительное восприятие противника резкими переходами от медлительных движений к невидимым выпадам. Седьмая форма «Дымка» создана самим Муичиро.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Муичиро Токито
+          </div>
+        </div>
+
+        <!-- 9. Дыхание Насекомого -->
+        <div class="skill-card" style="--card-accent: #c084fc;">
+          <div class="skill-kanji">蟲</div>
+          <div class="skill-form">Ответвление от Дыхания Цветка / Воды</div>
+          <h3 class="skill-title">Дыхание Насекомого</h3>
+          <div class="skill-jp-name">蟲の呼吸 • Mushi no Kokyū</div>
+          <p class="skill-desc">
+            Создано мечницей, не обладающей физической силой для отсечения головы демона. 
+            Использует тончайший стилет и серии стремительных жалящих уколов, вводящих в тело врага смертельные дозы яда из цветов глицинии.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Шинобу Кочо
+          </div>
+        </div>
+
+        <!-- 10. Дыхание Зверя -->
+        <div class="skill-card" style="--card-accent: #38bdf8;">
+          <div class="skill-kanji">獣</div>
+          <div class="skill-form">Дикое ответвление от Дыхания Ветра</div>
+          <h3 class="skill-title">Дыхание Зверя</h3>
+          <div class="skill-jp-name">獣の呼吸 • Kedamono no Kokyū</div>
+          <p class="skill-desc">
+            Самостоятельно разработано мечником, выросшим среди диких кабанов в горах. 
+            Два зазубренных клинка, разрывающие плоть траектории «Клыков» и сверхъестественное осязание кожи, чувствующее малейшие вибрации воздуха.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Иноске Хашибира
+          </div>
+        </div>
+
+        <!-- 11. Дыхание Любви -->
+        <div class="skill-card" style="--card-accent: #f472b6;">
+          <div class="skill-kanji">恋</div>
+          <div class="skill-form">Ответвление от Дыхания Пламени</div>
+          <h3 class="skill-title">Дыхание Любви</h3>
+          <div class="skill-jp-name">恋の呼吸 • Koi no Kokyū</div>
+          <p class="skill-desc">
+            Сочетает уникальную восьмикратную плотность мышечной ткани мечницы с грацией художественной гимнастики. 
+            Использует сверхгибкий ленточный меч ничирин, обвивающий врага словно хлыст на молниеносной скорости.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Мицури Канроджи
+          </div>
+        </div>
+
+        <!-- 12. Дыхание Змеи -->
+        <div class="skill-card" style="--card-accent: #e2e8f0;">
+          <div class="skill-kanji">蛇</div>
+          <div class="skill-form">Ответвление от Дыхания Воды</div>
+          <h3 class="skill-title">Дыхание Змеи</h3>
+          <div class="skill-jp-name">蛇の呼吸 • Hebi no Kokyū</div>
+          <p class="skill-desc">
+            Имитирует скользящие и извивающиеся атаки ядовитой змеи. 
+            Волнообразный клинок крис огибает любые блоки и наносит смертельные уколы через минимальные щели в обороне противника.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Обанай Игуро
+          </div>
+        </div>
+
+        <!-- 13. Дыхание Звука -->
+        <div class="skill-card" style="--card-accent: #fb923c;">
+          <div class="skill-kanji">音</div>
+          <div class="skill-form">Ответвление от Дыхания Грома</div>
+          <h3 class="skill-title">Дыхание Звука</h3>
+          <div class="skill-jp-name">音の呼吸 • Oto no Kokyū</div>
+          <p class="skill-desc">
+            Создано элитным шиноби. Использует массивные сдвоенные тесаки на цепи и звуковые пороховые бомбы. 
+            Техника «Партитура боя» раскладывает движения врага на ноты, позволяя читать и отбивать любые атаки.
+          </p>
+          <div class="skill-users">
+            <strong>Мастер:</strong> Тенген Узуй
+          </div>
+        </div>
+
+        <!-- 14. Дыхание Цветка -->
+        <div class="skill-card" style="--card-accent: #fb7185;">
+          <div class="skill-kanji">花</div>
+          <div class="skill-form">Ответвление от Дыхания Воды</div>
+          <h3 class="skill-title">Дыхание Цветка</h3>
+          <div class="skill-jp-name">花の呼吸 • Hana no Kokyū</div>
+          <p class="skill-desc">
+            Изящный и грациозный стиль, имитирующий распускающиеся лепестки сакуры. 
+            Финальная форма «Алые глаза равноденствия» разгоняет зрение до кинетического предела, замедляя восприятие мира вокруг мечника.
+          </p>
+          <div class="skill-users">
+            <strong>Мастера:</strong> Канао Цуюри, Канаэ Кочо
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. СЕКЦИЯ: ДЕВЯТЬ СТОЛПОВ (ХАШИРА) С ФОТОГРАФИЯМИ -->
+  <section class="section hashira-section" id="hashira">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-sub">Опора Кисацутай • Высшие мечники</div>
+        <h2 class="section-title">Девять Столпов (Хашира)</h2>
+        <p class="section-desc">
+          Сильнейшие воины организации Истребителей демонов под началом главы рода Убуяшики. Каждый из них посвятил жизнь защите человечества.
+        </p>
+      </div>
+
+      <div class="hashira-grid">
+
+        <!-- 1. Гию Томиока -->
+        <div class="hashira-card" style="--p-color: #00f0ff; --p-glow: rgba(0, 240, 255, 0.4);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Воды</span>
+            <img class="hashira-photo" src="images/giyu.webp" alt="Гию Томиока" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Гию Томиока</h3>
+            <div class="hashira-jp-title">冨岡 義勇 • Giyu Tomioka</div>
+            <p class="hashira-desc">
+              Первый Столп, встретивший Танджиро и Незуко. Невероятно сдержанный и молчаливый мечник, скрывающий тяжелое прошлое. 
+              Создал легендарную одиннадцатую форму Дыхания Воды — «Штиль» (Наги), сводящую на нет любые вражеские выпады.
+            </p>
+            <div class="hashira-quote">«Не позволяй отчаянию лишать тебя рассудка. Бери клинок и сражайся!»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Ничирин глубокого синего цвета</span>
+              <span><strong>Хаори:</strong> Двойной узор в память о Сабито и сестре</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Кёдзюро Ренгоку -->
+        <div class="hashira-card" style="--p-color: #ff4500; --p-glow: rgba(255, 69, 0, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Пламени</span>
+            <img class="hashira-photo" src="images/rengoku.webp" alt="Кёдзюро Ренгоку" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Кёдзюро Ренгоку</h3>
+            <div class="hashira-jp-title">煉獄 杏寿郎 • Kyojuro Rengoku</div>
+            <p class="hashira-desc">
+              Воплощение доблести, чести и пылающего сердца. Сын бывшего Столпа Пламени, самостоятельно овладевший стилем по старинным свиткам. 
+              В битве в Бесконечном Поезде ценой собственной жизни спас всех 200 пассажиров в противостоянии с Третьей Высшей Луной Аказой.
+            </p>
+            <div class="hashira-quote">«Зажги свое сердце! Превзойди свои пределы и иди только вперед!»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Огненное лезвие с рисунком языков пламени</span>
+              <span><strong>Цуба:</strong> Форма пылающего костра</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Тенген Узуй -->
+        <div class="hashira-card" style="--p-color: #fb923c; --p-glow: rgba(251, 146, 60, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Звука</span>
+            <img class="hashira-photo" src="images/tengen.jpg" alt="Тенген Узуй" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Тенген Узуй</h3>
+            <div class="hashira-jp-title">宇髄 天元 • Tengen Uzui</div>
+            <p class="hashira-desc">
+              Бывший элитный шиноби, сделавший битвы яркими и эффектными. Обладает абсолютным слухом, сопротивляемостью к ядам и взрывным арсеналом. 
+              В Квартале красных фонарей вместе с охотниками одолел Шестую Высшую Луну Даки и Гютаро.
+            </p>
+            <div class="hashira-quote">«Я бог праздников и яркости! Смотри и учись, как нужно сиять!»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Парные тесаки ничирин на массивной цепи</span>
+              <span><strong>Особое умение:</strong> Партитура боя</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Муичиро Токито -->
+        <div class="hashira-card" style="--p-color: #2dd4bf; --p-glow: rgba(45, 212, 191, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Тумана</span>
+            <img class="hashira-photo" src="images/muichiro.webp" alt="Муичиро Токито" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Муичиро Токито</h3>
+            <div class="hashira-jp-title">時透 無一郎 • Muichiro Tokito</div>
+            <p class="hashira-desc">
+              Самый юный вундеркинд в истории Кисацутай — стал Столпом всего через два месяца после начала владения клинком! 
+              Прямой потомок клана Цугикуни (Кокушибо), самостоятельно в одиночку сокрушивший Пятую Высшую Луну Гёкко.
+            </p>
+            <div class="hashira-quote">«Туман рассеивается, когда восходит солнце. Мой клинок не знает сомнений.»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Бело-бирюзовый ничирин</span>
+              <span><strong>Форма:</strong> Создатель 7-й формы «Дымка»</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Шинобу Кочо -->
+        <div class="hashira-card" style="--p-color: #c084fc; --p-glow: rgba(192, 132, 252, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Насекомого</span>
+            <img class="hashira-photo" src="images/shinobu.jpg" alt="Шинобу Кочо" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Шинобу Кочо</h3>
+            <div class="hashira-jp-title">胡蝶 しのぶ • Shinobu Kocho</div>
+            <p class="hashira-desc">
+              Гениальный фармацевт и целитель Поместья Бабочки. Компенсирует нехватку физической силы скоростными колющими ударами шпаги, 
+              вводящими в демонов смертоносные яды из глицинии. Ее самопожертвование стало ключом к уничтожению Второй Высшей Луны Доумы.
+            </p>
+            <div class="hashira-quote">«Демоны и люди могли бы дружить... если бы вы только не пожирали нас.»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Тонкий стилет с ядовитым каналом</span>
+              <span><strong>Хаори:</strong> Узор крыльев бабочки сестры Канаэ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Мицури Канроджи -->
+        <div class="hashira-card" style="--p-color: #f472b6; --p-glow: rgba(244, 114, 182, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Любви</span>
+            <img class="hashira-photo" src="images/mitsuri.webp" alt="Мицури Канроджи" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Мицури Канроджи</h3>
+            <div class="hashira-jp-title">甘露寺 蜜璃 • Mitsuri Kanroji</div>
+            <p class="hashira-desc">
+              Девушка с редчайшей плотностью мышц, превосходящей человеческую в 8 раз при невероятной гибкости тела. 
+              Сражается длинным гибким клинком-хлыстом, рассекая атаки демонов в грациозном вихре акробатических выпадов.
+            </p>
+            <div class="hashira-quote">«Я буду защищать тех, кого люблю, даже если мое сердце разорвется от боли!»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Сверхгибкий ленточный меч ничирин</span>
+              <span><strong>Стиль:</strong> Акробатический танец клинка</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Обанай Игуро -->
+        <div class="hashira-card" style="--p-color: #38bdf8; --p-glow: rgba(56, 189, 248, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Змеи</span>
+            <img class="hashira-photo" src="images/obanai.webp" alt="Обанай Игуро" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Обанай Игуро</h3>
+            <div class="hashira-jp-title">伊黒 小芭内 • Obanai Iguro</div>
+            <p class="hashira-desc">
+              Скрытный и преданный Столп Змеи. В бою ориентируется с помощью своей верной белой змеи Кабурамару. 
+              Его изогнутый кривой клинок крис наносит извивающиеся и непредсказуемые выпады, огибая любые препятствия.
+            </p>
+            <div class="hashira-quote">«Мое тело отравлено грехами предков, но мой клинок очистит мир от скверны.»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Волнообразный кривой меч крис</span>
+              <span><strong>Спутник:</strong> Белая змея Кабурамару</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. Санеми Шинадзугава -->
+        <div class="hashira-card" style="--p-color: #10b981; --p-glow: rgba(16, 185, 129, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Ветра</span>
+            <img class="hashira-photo" src="images/sanemi.webp" alt="Санеми Шинадзугава" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Санеми Шинадзугава</h3>
+            <div class="hashira-jp-title">不死川 実弥 • Sanemi Shinazugawa</div>
+            <p class="hashira-desc">
+              Покрытый боевыми шрамами, свирепый и несокрушимый мечник. 
+              Обладает редчайшей кровью Маречи, запах которой опьяняет и парализует демонов. 
+              За внешней жестокостью скрывал желание уберечь младшего брата Генью от кошмаров войны.
+            </p>
+            <div class="hashira-quote">«Я сотру в пыль каждого демона до последней капли своей крови!»</div>
+            <div class="hashira-specs">
+              <span><strong>Клинок:</strong> Зеленый зазубренный ничирин</span>
+              <span><strong>Особенность:</strong> Опьяняющая демонов кровь Маречи</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. Гёмей Химеджима -->
+        <div class="hashira-card" style="--p-color: #a3e635; --p-glow: rgba(163, 230, 53, 0.45);">
+          <div class="hashira-photo-wrapper">
+            <span class="hashira-badge">Столп Камня</span>
+            <img class="hashira-photo" src="images/gyomei.webp" alt="Гёмей Химеджима" />
+            <div class="hashira-photo-overlay"></div>
+          </div>
+          <div class="hashira-content">
+            <h3 class="hashira-name">Гёмей Химеджима</h3>
+            <div class="hashira-jp-title">悲鳴嶼 行冥 • Gyomei Himejima</div>
+            <p class="hashira-desc">
+              Безоговорочно сильнейший мечник среди всех девяти Столпов текущей эпохи. 
+              Слепой монах гигантского роста с несгибаемой духовной мощью. Сражается массивным шипованным шаром и секирой на железной цепи, ориентируясь по малейшему звуку эха.
+            </p>
+            <div class="hashira-quote">«Наму Амида Буцу... Бедные создания, мне искренне жаль вас...»</div>
+            <div class="hashira-specs">
+              <span><strong>Оружие:</strong> Секира и шипованный шар на железной цепи</span>
+              <span><strong>Статус:</strong> Сильнейший Хашира Корпуса</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. СЕКЦИЯ: ТРЕНИРОВОЧНОЕ ДОДЗЕ -->
+  <section class="dojo-section">
+    <div class="container">
+      <div class="dojo-kanji">道場</div>
+      <h2 class="section-title" style="margin-bottom: 14px;">Тренировочное Додзе NeverProduct</h2>
+      <p class="section-desc" style="margin-bottom: 35px;">
+        Проверь остроту своего клинка ничирин. Нажми кнопку, чтобы нанести рассекающий удар со звуком рассекаемой стали!
+      </p>
+      <button class="btn-slash" id="dojoStrikeBtn">РАССЕКАЮЩИЙ УДАР КЛИНОМ ⚔️</button>
+    </div>
+  </section>
+
+  <!-- 5. СЕКЦИЯ: ПОСЛАНИЕ ВОРОНОМ КАСУГАЙ -->
+  <section class="crow-section">
+    <div class="crow-kanji">悪鬼滅殺</div>
+    <h2 class="crow-title">Послание Вороном Касугай</h2>
+    <p class="crow-desc">
+      Сайт <strong>NeverProduct</strong> посвящен величию вселенной Клинок, рассекающий демонов. 
+      Если ты ищешь союзника для эпических проектов — отправь весточку вороном!
+    </p>
+    <a href="https://t.me/yourusername" target="_blank" class="btn-slash" style="text-decoration: none;">
+      ОТПРАВИТЬ ПОСЛАНИЕ В TELEGRAM 🦅
+    </a>
+  </section>
+
+  <!-- БИБЛИОТЕКИ GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* ==============================================================
+       1. СИНТЕТИЧЕСКИЙ ЗВУК КАТАНЫ (Web Audio API)
+       ============================================================== */
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playKatanaSound() {
+      if (!soundEnabled) return;
+      initAudio();
+
+      const now = audioCtx.currentTime;
+
+      // 1. Шум взмаха воздуха
+      const bufferSize = audioCtx.sampleRate * 0.22;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+      }
+
+      const whiteNoise = audioCtx.createBufferSource();
+      whiteNoise.buffer = buffer;
+
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(3600, now);
+      filter.frequency.exponentialRampToValueAtTime(300, now + 0.2);
+
+      const gainNoise = audioCtx.createGain();
+      gainNoise.gain.setValueAtTime(1, now);
+      gainNoise.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+
+      whiteNoise.connect(filter);
+      filter.connect(gainNoise);
+      gainNoise.connect(audioCtx.destination);
+      whiteNoise.start(now);
+
+      // 2. Металлический звон стали
+      const osc = audioCtx.createOscillator();
+      const oscGain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(2600, now + 0.05);
+      osc.frequency.exponentialRampToValueAtTime(1800, now + 0.35);
+
+      oscGain.gain.setValueAtTime(0.35, now + 0.05);
+      oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+      osc.connect(oscGain);
+      oscGain.connect(audioCtx.destination);
+      osc.start(now + 0.05);
+      osc.stop(now + 0.35);
+    }
+
+    const soundBtn = document.getElementById('btn-sound');
+    soundBtn.addEventListener('click', () => {
+      initAudio();
+      soundEnabled = !soundEnabled;
+      soundBtn.textContent = soundEnabled ? 'Звук: ВКЛ 🔊' : 'Звук: ВЫКЛ 🔇';
+      if (soundEnabled) playKatanaSound();
+    });
+
+    /* ==============================================================
+       2. ДЫХАНИЕ ВОДЫ: КАСТОМНЫЙ КУРСОР НА ХОЛСТЕ
+       ============================================================== */
+    const canvas = document.getElementById('cursor-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const colors = ['#ffffff', '#00f0ff', '#00b4d8', '#90e0ef'];
+
+    class WaterSpurt {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 4 + 2;
+        this.vx = (Math.random() - 0.5) * 4;
+        this.vy = (Math.random() - 0.5) * 4;
+        this.alpha = 1;
+        this.decay = Math.random() * 0.03 + 0.02;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= this.decay;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = this.color;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function addParticles(x, y) {
+      for (let i = 0; i < 3; i++) {
+        particles.push(new WaterSpurt(x, y));
+      }
+    }
+
+    window.addEventListener('mousemove', (e) => addParticles(e.clientX, e.clientY));
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) addParticles(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+
+    function animateCursor() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+
+    /* ==============================================================
+       3. АНИМАЦИИ GSAP И УДАР КЛИНКОМ
+       ============================================================== */
+    function showToast(text) {
+      const toast = document.getElementById('toastBox');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function triggerBladeSlash() {
+      playKatanaSound();
+      const blade = document.getElementById('slashBlade');
+
+      gsap.timeline()
+        .set(blade, { opacity: 1, scaleX: 0 })
+        .to(blade, { scaleX: 1, duration: 0.15, ease: 'power4.in' })
+        .to(blade, { opacity: 0, duration: 0.25, ease: 'power2.out' })
+        .fromTo("body", { backgroundColor: "#141c28" }, { backgroundColor: "#07080b", duration: 0.4 }, 0.05);
+
+      showToast('Удар клинка NeverProduct! ⚔️');
+    }
+
+    document.getElementById('strikeBtn').addEventListener('click', triggerBladeSlash);
+    document.getElementById('dojoStrikeBtn').addEventListener('click', triggerBladeSlash);
+
+    // Входная анимация Hero
+    gsap.timeline()
+      .from(".hero-kanji", { scale: 0.7, opacity: 0, duration: 1.5, ease: "power3.out" })
+      .from(".hero-badge", { y: -20, opacity: 0, duration: 0.8 }, "-=1")
+      .from(".hero-title", { y: 60, opacity: 0, duration: 1, ease: "power4.out" }, "-=0.6")
+      .from(".hero-subtitle", { y: 30, opacity: 0, duration: 0.8 }, "-=0.6")
+      .from(".hero-actions", { scale: 0.9, opacity: 0, duration: 0.6 }, "-=0.4");
+
+    // Parallax иероглифа
+    gsap.to(".hero-kanji", {
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top top",
+        end: "bottom top",
+        scrub: 1.2
+      },
+      y: 250,
+      scale: 1.15
+    });
+
+    // Карточки стилей
+    gsap.utils.toArray(".skill-card").forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%",
+        },
+        y: 40,
+        opacity: 0,
+        duration: 0.6,
+        delay: (i % 3) * 0.1,
+        ease: "power2.out"
+      });
+    });
+
+    // Карточки столпов
+    gsap.utils.toArray(".hashira-card").forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger: {
+          trigger: card,
+          start: "top 85%",
+        },
+        y: 50,
+        opacity: 0,
+        duration: 0.7,
+        delay: (i % 3) * 0.12,
+        ease: "power2.out"
+      });
+    });
+  </script>
+</body>
+</html>
